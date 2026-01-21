@@ -124,14 +124,19 @@ async function showMainView(p) {
 
 
     <div class="modal-buttons">
+      <button onclick="toggleMatchups()">🛡️ Debilidades y resistencias</button>
       <button onclick="showMoves('level-up')">📈 Por nivel</button>
       <button onclick="showMoves('machine')">💿 Por MT</button>
     </div>
+
+    <div id="matchupsContainer" style="display:none;"></div>
+
   `;
 }
 
 window.loadForm = async url => {
   const p = await fetch(url).then(r=>r.json());
+  currentPokemon = p;
   await showMainView(p);
 };
 
@@ -174,16 +179,16 @@ async function showMoves(method) {
 
     container.innerHTML += `
     <div class="move type-${data.type.name}">
-        <strong>${pretty(entry.move.name)}</strong>
-        ${method === "level-up" ? ` <span>(Nv. ${entry.level})</span>` : ""}
-        <br>
-        <span>Tipo: ${cap(data.type.name)}</span> |
-        <span>Clase: ${cap(data.damage_class.name)}</span>
-        <br>
-        <small>
-          ${description ? description.flavor_text.replace(/\n|\f/g, " ") : "Sin descripción"}
-        </small>
-      </div>
+      <strong>${pretty(entry.move.name)}</strong>
+      ${method === "level-up" ? ` <span>(Nv. ${entry.level})</span>` : ""}
+      <br>
+      <span>${cap(data.type.name)}</span> ·
+      <span>${cap(data.damage_class.name)}</span>
+      <br>
+      <small>
+        ${description ? description.flavor_text.replace(/\\n|\\f/g, " ") : "Sin descripción"}
+      </small>
+    </div>
     `;
   }
 }
@@ -233,6 +238,70 @@ async function renderAbilities(abilities) {
   return html;
 }
 
+/* ========= COMPATIBILIDAD DE TIPOS ========= */
+async function getTypeEffectiveness(types) {
+  const result = {};
+
+  for (const t of types) {
+    const data = await fetch(t.type.url).then(r => r.json());
+
+    data.damage_relations.double_damage_from.forEach(x => {
+      result[x.name] = (result[x.name] || 1) * 2;
+    });
+
+    data.damage_relations.half_damage_from.forEach(x => {
+      result[x.name] = (result[x.name] || 1) * 0.5;
+    });
+
+    data.damage_relations.no_damage_from.forEach(x => {
+      result[x.name] = 0;
+    });
+  }
+
+  return result;
+}
+
+async function renderTypeMatchups(pokemon) {
+  const effectiveness = await getTypeEffectiveness(pokemon.types);
+
+  const weak = [];
+  const resist = [];
+  const immune = [];
+
+  for (const [type, value] of Object.entries(effectiveness)) {
+    if (value >= 2) weak.push(type);
+    else if (value === 0) immune.push(type);
+    else if (value < 1) resist.push(type);
+  }
+
+  return `
+    <div class="matchups">
+      <h3>🔴 Débil contra</h3>
+      <div class="types">${weak.map(typeTag).join("") || "—"}</div>
+
+      <h3>🟢 Resiste</h3>
+      <div class="types">${resist.map(typeTag).join("") || "—"}</div>
+
+      <h3>⚫ Inmune</h3>
+      <div class="types">${immune.map(typeTag).join("") || "—"}</div>
+    </div>
+  `;
+}
+
+async function toggleMatchups() {
+  const container = document.getElementById("matchupsContainer");
+
+  if (container.style.display === "block") {
+    container.style.display = "none";
+    container.innerHTML = "";
+    return;
+  }
+
+  container.style.display = "block";
+  container.innerHTML = "Calculando compatibilidad…";
+
+  container.innerHTML = await renderTypeMatchups(currentPokemon);
+}
 
 /* ========= EVENTS ========= */
 
