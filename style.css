@@ -1,0 +1,208 @@
+body {
+  margin: 0;
+  background: #b71c1c;
+  font-family: Arial, sans-serif;
+}
+
+.pokedex {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+header {
+  background: #d32f2f;
+  color: white;
+  padding: 15px;
+  border-radius: 15px;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+#pokedex {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 15px;
+}
+
+.card {
+  background: #fafafa;
+  border-radius: 15px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.card img {
+  width: 120px;
+  display: block;
+  margin: auto;
+}
+
+/* ===== TAGS DE TIPO ===== */
+
+.types {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.type {
+  padding: 4px 6px;
+  border-radius: 6px;
+  color: white;
+  font-size: 12px;
+}
+
+.type-fire { background:#f08030 }
+.type-water { background:#6890f0 }
+.type-grass { background:#78c850 }
+.type-electric { background:#f8d030 }
+.type-ice { background:#98d8d8 }
+.type-fighting { background:#c03028 }
+.type-poison { background:#a040a0 }
+.type-ground { background:#e0c068 }
+.type-flying { background:#a890f0 }
+.type-psychic { background:#f85888 }
+.type-bug { background:#a8b820 }
+.type-rock { background:#b8a038 }
+.type-ghost { background:#705898 }
+.type-dragon { background:#7038f8 }
+.type-dark { background:#705848 }
+.type-steel { background:#b8b8d0 }
+.type-fairy { background:#ee99ac }
+.type-normal { background:#a8a878 }
+
+/* ===== MODAL ===== */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hidden { display: none }
+
+.modal-content {
+  background: white;
+  width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 15px;
+  padding: 20px;
+}
+
+#closeModal {
+  float: right;
+  cursor: pointer;
+}
+
+/* ===== STATS ===== */
+
+.stat-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+.bar {
+  height: 8px;
+  background: #ddd;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.bar span {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+}
+
+.stat-hp span { background:#e53935 }
+.stat-attack span { background:#fb8c00 }
+.stat-defense span { background:#fdd835 }
+.stat-spatk span { background:#1e88e5 }
+.stat-spdef span { background:#8e24aa }
+.stat-speed span { background:#43a047 }
+
+/* ===== MOVES ===== */
+
+.moves {
+  margin-top: 10px;
+}
+
+.move {
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+/* --- todo lo anterior se mantiene --- */
+
+.moves-list {
+  margin-top: 10px;
+}
+
+.move {
+  border-bottom: 1px solid #ddd;
+  padding: 6px 0;
+}
+
+.move strong {
+  display: block;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.ability {
+  margin-bottom: 10px;
+}
+
+.ability p {
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+
+.move {
+  border-bottom: 1px solid #ddd;
+  padding: 8px 0;
+}
+
+.move span {
+  font-size: 12px;
+}
+
+.move {
+  border-radius: 8px;
+  padding: 8px;
+  margin-bottom: 8px;
+  color: white;
+}
+
+.move small {
+  color: rgba(255,255,255,0.9);
+}

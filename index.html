@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Pokédex</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="pokedex">
+  <header>
+    <h1>📕 Pokédex</h1>
+    <div class="controls">
+      <select id="generation">
+        <option value="all">Todos</option>
+        <option value="1">Gen 1</option>
+        <option value="2">Gen 2</option>
+        <option value="3">Gen 3</option>
+        <option value="4">Gen 4</option>
+        <option value="5">Gen 5</option>
+        <option value="6">Gen 6</option>
+        <option value="7">Gen 7</option>
+        <option value="8">Gen 8</option>
+        <option value="9">Gen 9</option>
+      </select>
+
+      <input id="search" type="text" placeholder="Buscar Pokémon…">
+    </div>
+  </header>
+
+  <main id="pokedex"></main>
+
+  <div class="pagination">
+    <button id="prevPage">⬅ Anterior</button>
+    <span id="pageInfo"></span>
+    <button id="nextPage">Siguiente ➡</button>
+  </div>
+</div>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-content">
+    <span id="closeModal">✖</span>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
