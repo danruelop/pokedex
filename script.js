@@ -16,6 +16,14 @@ const gens = {
   8:[810,905],9:[906,1025]
 };
 
+const iconMap = {
+  "Normal": "⚪",
+  "Pseudo-legendario": "🔷",
+  "Legendario": "⭐",
+  "Mítico": "✨",
+  "Mega": "💥"
+};
+
 /* ========= COMPETITIVO ========= */
 
 const EVIOLITE_COMPETITIVE = new Set([
@@ -140,6 +148,20 @@ async function showMainView(p) {
     <img src="${p.sprites.front_default}">
     <div class="types">${p.types.map(t=>typeTag(t.type.name)).join("")}</div>
 
+    ${currentSpecies ? (() => {
+      const category = getPokemonCategory(p, currentSpecies);
+      const cls = category
+        .toLowerCase()
+        .replace("í", "i")
+        .replace(/\s+/g, "-");
+
+      return `
+        <div class="pokemon-category category-${cls}">
+          ${iconMap[category] || "🏷️"} <strong>Categoría:</strong> ${category}
+        </div>
+      `;
+    })() : ""}
+
     <h3>Formas</h3>
     ${currentVarieties.map(v=>`
       <button onclick="loadForm('${v.pokemon.url}')">${pretty(v.pokemon.name)}</button>
@@ -147,6 +169,10 @@ async function showMainView(p) {
 
     <h3>Estadísticas</h3>
     ${p.stats.map(renderStat).join("")}
+
+    <div class="bst-total">
+      📊 <strong>BST total:</strong> ${getBST(p)}
+    </div>
 
     ${await renderAbilities(p.abilities)}
 
@@ -252,6 +278,14 @@ function renderStat(stat) {
     </div>
   `;
 }
+
+function getBST(pokemon) {
+  return pokemon.stats.reduce(
+    (total, stat) => total + stat.base_stat,
+    0
+  );
+}
+
 
 /* ========= ABILITIES ========= */
 async function renderAbilities(abilities) {
@@ -560,6 +594,22 @@ function isFinalEvolution(species, chain) {
   }
 
   return traverse(chain) === true;
+}
+
+function getPokemonCategory(pokemon, species) {
+  // Mega tiene prioridad absoluta
+  if (pokemon.name.includes("mega")) {
+    return "Mega";
+  }
+
+  if (species.is_mythical) return "Mítico";
+  if (species.is_legendary) return "Legendario";
+
+  const bst = pokemon.stats.reduce((sum, s) => sum + s.base_stat, 0);
+
+  if (bst >= 600) return "Pseudo-legendario";
+
+  return "Normal";
 }
 
 /* ========= EVENTS ========= */

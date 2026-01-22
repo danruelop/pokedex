@@ -163,6 +163,14 @@ header {
 .stat-spdef .bar span { background:#8e24aa }
 .stat-speed .bar span { background:#43a047 }
 
+.bst-total {
+  background: #f5f5f5;
+  padding: 6px 8px;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+
 /* ===== MOVES ===== */
 
 .moves {
@@ -269,3 +277,39 @@ header {
 .competitive-link a:hover {
   background: #444;
 }
+
+.pokemon-category {
+  margin: 6px 0 10px;
+  font-size: 0.9em;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+/* Colores por categoría */
+.category-normal {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.category-pseudo-legendario {
+  background: #5c6bc0; /* azul-morado */
+  color: white;
+}
+
+.category-legendario {
+  background: #f9a825; /* dorado */
+  color: #3e2723;
+}
+
+.category-mitico {
+  background: #ec407a; /* rosa */
+  color: white;
+}
+
+.category-mega {
+  background: linear-gradient(135deg, #d81b60, #8e24aa);
+  color: white;
+}
+
