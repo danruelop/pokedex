@@ -313,3 +313,22 @@ header {
   color: white;
 }
 
+.category-gigamax {
+  background: linear-gradient(135deg, #7b1fa2, #4a148c);
+  color: white;
+}
+
+.gmax-move {
+  margin: 12px 0;
+}
+
+.gmax-move .move {
+  padding: 8px;
+  border-radius: 8px;
+  color: white;
+}
+
+.gmax-move p {
+  margin-top: 6px;
+  font-size: 0.85em;
+}

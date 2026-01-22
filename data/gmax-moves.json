@@ -1,0 +1,205 @@
+{
+  "venusaur": {
+    "name": "G-Max Vine Lash",
+    "type": "grass",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Durante 4 turnos, los Pokémon que no sean de tipo Planta reciben daño al final de cada turno."
+  },
+  "charizard": {
+    "name": "G-Max Wildfire",
+    "type": "fire",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Durante 4 turnos, los Pokémon que no sean de tipo Fuego reciben daño al final de cada turno."
+  },
+  "blastoise": {
+    "name": "G-Max Cannonade",
+    "type": "water",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Durante 4 turnos, los Pokémon que no sean de tipo Agua reciben daño al final de cada turno."
+  },
+
+  "butterfree": {
+    "name": "G-Max Befuddle",
+    "type": "bug",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Puede causar envenenamiento, parálisis o sueño a los Pokémon rivales."
+  },
+  "pikachu": {
+    "name": "G-Max Volt Crash",
+    "type": "electric",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Paraliza a todos los Pokémon rivales."
+  },
+  "meowth": {
+    "name": "G-Max Gold Rush",
+    "type": "normal",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Confunde a los rivales y otorga dinero extra tras el combate."
+  },
+  "eevee": {
+    "name": "G-Max Cuddle",
+    "type": "normal",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Puede causar enamoramiento a los Pokémon rivales."
+  },
+
+  "snorlax": {
+    "name": "G-Max Replenish",
+    "type": "normal",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Puede restaurar una baya consumida."
+  },
+  "gengar": {
+    "name": "G-Max Terror",
+    "type": "ghost",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Los Pokémon rivales no pueden huir ni ser sustituidos."
+  },
+  "kingler": {
+    "name": "G-Max Foam Burst",
+    "type": "water",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Reduce la Velocidad de los Pokémon rivales."
+  },
+  "lapras": {
+    "name": "G-Max Resonance",
+    "type": "ice",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Activa Velo Aurora durante 5 turnos."
+  },
+  "machamp": {
+    "name": "G-Max Chi Strike",
+    "type": "fighting",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Aumenta la probabilidad de golpes críticos."
+  },
+  "garbodor": {
+    "name": "G-Max Malodor",
+    "type": "poison",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Puede envenenar gravemente a los Pokémon rivales."
+  },
+  "melmetal": {
+    "name": "G-Max Meltdown",
+    "type": "steel",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Reduce el Ataque Especial de los Pokémon rivales."
+  },
+
+  "rillaboom": {
+    "name": "G-Max Drum Solo",
+    "type": "grass",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Ignora las habilidades del objetivo."
+  },
+  "cinderace": {
+    "name": "G-Max Fireball",
+    "type": "fire",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Ignora las habilidades del objetivo."
+  },
+  "inteleon": {
+    "name": "G-Max Hydrosnipe",
+    "type": "water",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Ignora las habilidades del objetivo."
+  },
+
+  "corviknight": {
+    "name": "G-Max Wind Rage",
+    "type": "flying",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Elimina trampas y efectos de campo del rival."
+  },
+  "orbeetle": {
+    "name": "G-Max Gravitas",
+    "type": "psychic",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Reduce la Velocidad de los Pokémon rivales."
+  },
+  "drednaw": {
+    "name": "G-Max Stonesurge",
+    "type": "water",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Coloca trampas rocas en el campo rival."
+  },
+  "coalossal": {
+    "name": "G-Max Volcalith",
+    "type": "rock",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Durante 4 turnos, los Pokémon que no sean de tipo Roca reciben daño."
+  },
+  "flapple": {
+    "name": "G-Max Tartness",
+    "type": "grass",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Reduce la evasión de los Pokémon rivales."
+  },
+  "appletun": {
+    "name": "G-Max Sweetness",
+    "type": "grass",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Cura problemas de estado de los aliados."
+  },
+  "sandaconda": {
+    "name": "G-Max Sandblast",
+    "type": "ground",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Atrapa a los rivales e inflige daño durante varios turnos."
+  },
+  "toxtricity": {
+    "name": "G-Max Stun Shock",
+    "type": "electric",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Puede causar parálisis o envenenamiento."
+  },
+  "centiskorch": {
+    "name": "G-Max Centiferno",
+    "type": "fire",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Atrapa a los rivales e inflige daño durante varios turnos."
+  },
+  "hatterene": {
+    "name": "G-Max Smite",
+    "type": "fairy",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Puede causar confusión a los Pokémon rivales."
+  },
+  "grimmsnarl": {
+    "name": "G-Max Snooze",
+    "type": "dark",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Puede causar somnolencia al objetivo."
+  },
+  "alcremie": {
+    "name": "G-Max Finale",
+    "type": "fairy",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Cura a los aliados."
+  },
+  "copperajah": {
+    "name": "G-Max Steelsurge",
+    "type": "steel",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Coloca púas de acero en el campo rival."
+  },
+  "duraludon": {
+    "name": "G-Max Depletion",
+    "type": "dragon",
+    "description": "Movimiento exclusivo Gigamax.",
+    "effect": "Reduce los PP del último movimiento usado por el rival."
+  },
+
+  "urshifu": {
+    "name": "G-Max One Blow",
+    "type": "dark",
+    "description": "Movimiento exclusivo Gigamax (Estilo Brusco).",
+    "effect": "Ignora Protección y otros efectos defensivos."
+  },
+  "urshifu-rapid-strike": {
+    "name": "G-Max Rapid Flow",
+    "type": "water",
+    "description": "Movimiento exclusivo Gigamax (Estilo Fluido).",
+    "effect": "Golpea tres veces e ignora Protección."
+  }
+}

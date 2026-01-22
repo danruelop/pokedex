@@ -21,12 +21,16 @@ const iconMap = {
   "Pseudo-legendario": "🔷",
   "Legendario": "⭐",
   "Mítico": "✨",
-  "Mega": "💥"
+  "Mega": "💥",
+  "Gigamax": "🟣"
 };
+
+let GMAX_DATA = null;
 
 /* ========= COMPETITIVO ========= */
 
 const EVIOLITE_COMPETITIVE = new Set([
+  // Clásicos
   "chansey",
   "porygon2",
   "dusclops",
@@ -35,9 +39,19 @@ const EVIOLITE_COMPETITIVE = new Set([
   "electabuzz",
   "magmar",
   "clefairy",
-  "sneasel"
-]);
+  "sneasel",
 
+  // Muy relevantes
+  "tangela",
+  "gligar",
+  "roselia",
+  "haunter",
+
+  // Situacionales
+  "ferroseed",
+  "piloswine",
+  "golbat"
+]);
 
 let allPokemon = [];
 let filteredPokemon = [];
@@ -143,10 +157,15 @@ async function openModal(p) {
 
 
 async function showMainView(p) {
+  const gmaxMove = await getGmaxMove(p);
+
   modalBody.innerHTML = `
     <h2>#${String(p.id).padStart(3,"0")} ${pretty(p.name)}</h2>
     <img src="${p.sprites.front_default}">
-    <div class="types">${p.types.map(t=>typeTag(t.type.name)).join("")}</div>
+
+    <div class="types">
+      ${p.types.map(t => typeTag(t.type.name)).join("")}
+    </div>
 
     ${currentSpecies ? (() => {
       const category = getPokemonCategory(p, currentSpecies);
@@ -162,9 +181,23 @@ async function showMainView(p) {
       `;
     })() : ""}
 
+    ${gmaxMove ? `
+    <div class="gmax-move">
+      <h3>🔥 Movimiento G-Max</h3>
+      <div class="move type-${gmaxMove.type}">
+        <strong>${gmaxMove.name}</strong><br>
+        <small>Tipo: ${cap(gmaxMove.type)}</small>
+        <p><em>${gmaxMove.description}</em></p>
+        <p>${gmaxMove.effect}</p>
+      </div>
+    </div>
+    ` : ""}
+
     <h3>Formas</h3>
-    ${currentVarieties.map(v=>`
-      <button onclick="loadForm('${v.pokemon.url}')">${pretty(v.pokemon.name)}</button>
+    ${currentVarieties.map(v => `
+      <button onclick="loadForm('${v.pokemon.url}')">
+        ${pretty(v.pokemon.name)}
+      </button>
     `).join("")}
 
     <h3>Estadísticas</h3>
@@ -176,7 +209,6 @@ async function showMainView(p) {
 
     ${await renderAbilities(p.abilities)}
 
-
     <div class="modal-buttons">
       <button onclick="toggleMatchups()">🛡️ Debilidades y resistencias</button>
       <button onclick="showMoves('level-up')">📈 Por nivel</button>
@@ -187,15 +219,17 @@ async function showMainView(p) {
     <div id="matchupsContainer" style="display:none;"></div>
     <div id="cobbleverseContainer" style="display:none;"></div>
 
-    ${currentSpecies && currentEvolutionChain && shouldShowSmogonLink(p, currentSpecies, currentEvolutionChain) ? `
+    ${currentSpecies && currentEvolutionChain &&
+      shouldShowSmogonLink(p, currentSpecies, currentEvolutionChain) ? `
       <div class="competitive-link">
-        <a href="${getSmogonUrl(p, currentSpecies)}" target="_blank" rel="noopener">
+        <a href="${getSmogonUrl(p, currentSpecies)}"
+           target="_blank"
+           rel="noopener">
           🧠 Guía competitiva (Smogon)
         </a>
       </div>
     ` : ""}
-  `
-  ;
+  `;
 }
 
 window.loadForm = async url => {
@@ -597,19 +631,44 @@ function isFinalEvolution(species, chain) {
 }
 
 function getPokemonCategory(pokemon, species) {
-  // Mega tiene prioridad absoluta
+  // 1️⃣ Gigamax (máxima prioridad)
+  if (pokemon.name.endsWith("-gmax")) {
+    return "Gigamax";
+  }
+
+  // 2️⃣ Mega
   if (pokemon.name.includes("mega")) {
     return "Mega";
   }
 
+  // 3️⃣ Mítico / Legendario
   if (species.is_mythical) return "Mítico";
   if (species.is_legendary) return "Legendario";
 
+  // 4️⃣ Pseudo-legendario (por BST)
   const bst = pokemon.stats.reduce((sum, s) => sum + s.base_stat, 0);
-
   if (bst >= 600) return "Pseudo-legendario";
 
+  // 5️⃣ Normal
   return "Normal";
+}
+
+async function getGmaxMove(pokemon) {
+  if (!pokemon.name.endsWith("-gmax")) return null;
+
+  const baseName = pokemon.name.replace("-gmax", "");
+  const data = await loadGmaxData();
+
+  return data[baseName] || null;
+}
+
+async function loadGmaxData() {
+  if (GMAX_DATA) return GMAX_DATA;
+
+  GMAX_DATA = await fetch("./data/gmax-moves.json")
+    .then(r => r.json());
+
+  return GMAX_DATA;
 }
 
 /* ========= EVENTS ========= */
