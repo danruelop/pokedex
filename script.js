@@ -48,9 +48,12 @@ const typeTag = t => `<span class="type type-${t}">${cap(t)}</span>`;
 /* ========= LOAD ========= */
 
 async function loadGen(gen) {
+
+  localStorage.clear();
+
   allPokemon = [];
   currentPage = 0;
-  pokedex.innerHTML = "Cargando...";
+  pokedex.innerHTML = "Cargando Pokémon...";
 
   const ranges = gen === "all" ? Object.values(gens) : [gens[gen]];
   const promises = [];
@@ -575,7 +578,35 @@ async function fetchPokemon(id) {
   const data = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
     .then(r => r.json());
 
-  localStorage.setItem(key, JSON.stringify(data));
+  try {
+  localStorage.setItem(key, JSON.stringify({
+    id: data.id,
+    name: data.name,
+    sprites: data.sprites,
+    types: data.types,
+    stats: data.stats,
+    abilities: data.abilities,
+    moves: data.moves
+  }));
+  } catch (e) {
+    console.warn("Cache lleno, limpiando cache y reintentando");
+
+    localStorage.clear();
+
+    try {
+      localStorage.setItem(key, JSON.stringify({
+        id: data.id,
+        name: data.name,
+        sprites: data.sprites,
+        types: data.types,
+        stats: data.stats,
+        abilities: data.abilities,
+        moves: data.moves
+      }));
+  } catch {
+    // si aun así no cabe, lo ignoramos
+  }
+}
   return data;
 }
 
