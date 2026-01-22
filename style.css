@@ -113,31 +113,55 @@ header {
 
 /* ===== STATS ===== */
 
+.stat {
+  margin-bottom: 10px;
+}
+
 .stat-label {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
+  align-items: center;
+  margin-bottom: 4px;
+  font-size: 0.85em;
+  font-weight: 600;
+  color: #333;
+  letter-spacing: 0.3px;
 }
 
+.stat-label span {
+  text-decoration: none !important;
+  border: none !important;
+}
+
+.stat-label span:first-child {
+  text-transform: capitalize;
+}
+
+.stat-label span:last-child {
+  font-weight: 700;
+}
+
+/* Barra base */
 .bar {
+  background: #e0e0e0;
+  border-radius: 8px;
   height: 8px;
-  background: #ddd;
-  border-radius: 4px;
-  margin-bottom: 6px;
+  overflow: hidden;
 }
 
+/* Barra rellena */
 .bar span {
   display: block;
   height: 100%;
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
-.stat-hp span { background:#e53935 }
-.stat-attack span { background:#fb8c00 }
-.stat-defense span { background:#fdd835 }
-.stat-spatk span { background:#1e88e5 }
-.stat-spdef span { background:#8e24aa }
-.stat-speed span { background:#43a047 }
+.stat-hp .bar span { background:#e53935 }
+.stat-attack .bar span { background:#fb8c00 }
+.stat-defense .bar span { background:#fdd835 }
+.stat-spatk .bar span { background:#1e88e5 }
+.stat-spdef .bar span { background:#8e24aa }
+.stat-speed .bar span { background:#43a047 }
 
 /* ===== MOVES ===== */
 
@@ -205,4 +229,43 @@ header {
 
 .move small {
   color: rgba(255,255,255,0.9);
+}
+
+#cobbleverseContainer ul {
+  padding-left: 18px;
+}
+
+.biomes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.biome-tag {
+  background: #2e7d32;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+
+/* COMPETITIVO */
+
+.competitive-link {
+  margin-top: 12px;
+}
+
+.competitive-link a {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #2a2a2a;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.competitive-link a:hover {
+  background: #444;
 }

@@ -16,11 +16,28 @@ const gens = {
   8:[810,905],9:[906,1025]
 };
 
+/* ========= COMPETITIVO ========= */
+
+const EVIOLITE_COMPETITIVE = new Set([
+  "chansey",
+  "porygon2",
+  "dusclops",
+  "magneton",
+  "rhydon",
+  "electabuzz",
+  "magmar",
+  "clefairy",
+  "sneasel"
+]);
+
+
 let allPokemon = [];
 let filteredPokemon = [];
 let currentPage = 0;
 let currentPokemon = null;
 let currentVarieties = [];
+let currentSpecies = null;
+let currentEvolutionChain = null;
 
 /* ========= UTIL ========= */
 
@@ -97,14 +114,19 @@ function renderCard(p) {
 /* ========= MODAL ========= */
 
 async function openModal(p) {
+
   currentPokemon = p;
   modal.classList.remove("hidden");
 
-  const species = await fetch(p.species.url).then(r=>r.json());
-  currentVarieties = species.varieties;
+  currentSpecies = await fetch(p.species.url).then(r => r.json());
+  currentVarieties = currentSpecies.varieties;
+
+  const evoData = await fetch(currentSpecies.evolution_chain.url).then(r => r.json());
+  currentEvolutionChain = evoData.chain;
 
   await showMainView(p);
 }
+
 
 async function showMainView(p) {
   modalBody.innerHTML = `
@@ -127,11 +149,21 @@ async function showMainView(p) {
       <button onclick="toggleMatchups()">🛡️ Debilidades y resistencias</button>
       <button onclick="showMoves('level-up')">📈 Por nivel</button>
       <button onclick="showMoves('machine')">💿 Por MT</button>
+      <button onclick="toggleCobbleverseBiomes()">🌍 Biomas (Cobbleverse)</button>
     </div>
 
     <div id="matchupsContainer" style="display:none;"></div>
+    <div id="cobbleverseContainer" style="display:none;"></div>
 
-  `;
+    ${currentSpecies && currentEvolutionChain && shouldShowSmogonLink(p, currentSpecies, currentEvolutionChain) ? `
+      <div class="competitive-link">
+        <a href="${getSmogonUrl(p, currentSpecies)}" target="_blank" rel="noopener">
+          🧠 Guía competitiva (Smogon)
+        </a>
+      </div>
+    ` : ""}
+  `
+  ;
 }
 
 window.loadForm = async url => {
@@ -301,6 +333,227 @@ async function toggleMatchups() {
   container.innerHTML = "Calculando compatibilidad…";
 
   container.innerHTML = await renderTypeMatchups(currentPokemon);
+}
+
+/* ========= BIOMAS COBBLEVERSE ========= */
+let cobbleverseData = null;
+
+async function loadCobbleverseData() {
+  if (cobbleverseData) return cobbleverseData;
+
+  const url =
+    "https://docs.google.com/spreadsheets/d/1DJT7Hd0ldgVUjJbN0kYQFAyNBP6JGG_Clkipax98x-g/gviz/tq?tqx=out:json";
+
+  const text = await fetch(url).then(r => r.text());
+
+  // Google envía JSON envuelto en texto
+  const json = JSON.parse(
+    text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1)
+  );
+
+  const cols = json.table.cols.map(c => c.label.toLowerCase());
+  const rows = json.table.rows;
+
+  cobbleverseData = rows.map(r => {
+    const obj = {};
+    r.c.forEach((cell, i) => {
+      obj[cols[i]] = cell ? cell.v : "";
+    });
+    return obj;
+  });
+
+  return cobbleverseData;
+}
+
+async function getCobbleverseBiomes(pokemon) {
+  const data = await loadCobbleverseData();
+
+  const name = pokemon.name
+    .toLowerCase()
+    .replace(/-/g, " ")
+    .trim();
+
+  const normalize = str =>
+  str
+    .toLowerCase()
+    .normalize("NFD")                 // separa acentos
+    .replace(/[\u0300-\u036f]/g, "")  // elimina acentos
+    .replace(/[^a-z0-9 ]/g, "")       // limpia caracteres raros
+    .trim();
+
+  const target = normalize(name);
+
+  const entries = data.filter(row => {
+    if (!row["pokémon"]) return false;
+    return normalize(row["pokémon"]) === target;
+  });
+
+  if (!entries.length) {
+    return {
+      biomes: [],
+      times: [],
+      rarity: []
+    };
+  }
+
+let biomes = [];
+let times = [];
+let rarity = [];
+
+for (const entry of entries) {
+
+  // Biomas permitidos en ESTA fila
+  let allowed = [];
+
+  if (entry["biomes"]) {
+    allowed = entry["biomes"]
+      .split(/[,;]+/)
+      .map(b => b.replace(/^"+|"+$/g, "").trim())
+      .filter(Boolean);
+  }
+
+  // Biomas excluidos SOLO para esta fila
+  if (entry["excluded biomes"]) {
+    const excluded = entry["excluded biomes"]
+      .split(/[,;]+/)
+      .map(b => b.replace(/^"+|"+$/g, "").trim())
+      .filter(Boolean);
+
+    allowed = allowed.filter(b => !excluded.includes(b));
+  }
+
+  // Añadimos los biomas válidos de esta fila
+  biomes.push(...allowed);
+
+  // Time
+  if (entry["time"]) {
+    const raw = entry["time"].toLowerCase();
+    if (raw.includes("day")) times.push("Day");
+    if (raw.includes("night")) times.push("Night");
+    if (raw.includes("any")) times.push("Any");
+  }
+
+  // Rareza
+  // Rareza (bucket)
+  if (entry["bucket"]) {
+  rarity.push(
+    entry["bucket"]
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, l => l.toUpperCase())
+      .trim()
+  );
+}
+
+}
+
+  return {
+    biomes: [...new Set(biomes)],
+    times: [...new Set(times)],
+    rarity: [...new Set(rarity)]
+  };
+}
+
+async function toggleCobbleverseBiomes() {
+  const container = document.getElementById("cobbleverseContainer");
+
+  if (container.style.display === "block") {
+    container.style.display = "none";
+    container.innerHTML = "";
+    return;
+  }
+
+  container.style.display = "block";
+  container.innerHTML = "Cargando biomas…";
+
+  const data = await getCobbleverseBiomes(currentPokemon);
+
+  container.innerHTML = `
+    <h3>🌍 Biomas (Cobbleverse)</h3>
+    <div class="biomes-list">
+      ${
+        data.biomes.length
+          ? data.biomes.map(b => `<span class="biome-tag">${b}</span>`).join("")
+          : "—"
+      }
+    </div>
+
+    <h3>⏰ Momento del día</h3>
+    <div>${data.times.length ? data.times.join(", ") : "—"}</div>
+
+    <h3>⭐ Rareza</h3>
+    <div>${data.rarity.length ? data.rarity.join(", ") : "—"}</div>
+  `;
+}
+
+/* COMPETITIVO */
+
+function shouldShowSmogonLink(pokemon, species, evolutionChain) {
+  // Si no hay datos suficientes, no mostramos nada
+  if (!pokemon || !species || !evolutionChain) return false;
+
+  // Caso 1: Eviolite competitivo
+  if (EVIOLITE_COMPETITIVE.has(pokemon.name)) return true;
+
+  // Caso 2: no evoluciona en absoluto
+  if (!species.evolves_from_species && evolutionChain.evolves_to.length === 0) {
+    return true;
+  }
+
+  // Caso 3: fase final real
+  if (isFinalEvolution(species, evolutionChain)) {
+    return true;
+  }
+
+  return false;
+}
+
+function getSmogonUrl(pokemon, species) {
+  const name = species ? species.name : pokemon.name;
+
+  const gen = species?.generation?.name;
+
+  // Prioridad: Sun & Moon si existía
+  if (gen && ["generation-i","generation-ii","generation-iii","generation-iv","generation-v","generation-vi","generation-vii"].includes(gen)) {
+    return `https://www.smogon.com/dex/sm/pokemon/${name}/`;
+  }
+
+  // Gen 8
+  if (gen === "generation-viii") {
+    return `https://www.smogon.com/dex/ss/pokemon/${name}/`;
+  }
+
+  // Gen 9
+  if (gen === "generation-ix") {
+    return `https://www.smogon.com/dex/sv/pokemon/${name}/`;
+  }
+
+  // Fallback seguro
+  return `https://www.smogon.com/dex/sm/pokemon/${name}/`;
+}
+
+function getSmogonName(pokemon, species) {
+  return species.name;
+}
+
+function isFinalEvolution(species, chain) {
+  function traverse(node) {
+    if (!node || !node.species) return null;
+
+    if (node.species.name === species.name) {
+      return !node.evolves_to || node.evolves_to.length === 0;
+    }
+
+    if (!node.evolves_to) return null;
+
+    for (const next of node.evolves_to) {
+      const result = traverse(next);
+      if (result !== null) return result;
+    }
+
+    return null;
+  }
+
+  return traverse(chain) === true;
 }
 
 /* ========= EVENTS ========= */
