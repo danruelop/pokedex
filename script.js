@@ -52,15 +52,18 @@ async function loadGen(gen) {
   currentPage = 0;
   pokedex.innerHTML = "Cargando...";
 
-  const ranges = gen==="all" ? Object.values(gens) : [gens[gen]];
-  for (const [s,e] of ranges) {
-    for (let i=s;i<=e;i++) {
-      const p = await fetch(`https://pokeapi.co/api/v2/pokemon/${i}`).then(r=>r.json());
-      allPokemon.push(p);
+  const ranges = gen === "all" ? Object.values(gens) : [gens[gen]];
+  const promises = [];
+
+  for (const [s, e] of ranges) {
+    for (let i = s; i <= e; i++) {
+      promises.push(fetchPokemon(i)); // 👈 AQUÍ
     }
   }
 
-  allPokemon.sort((a,b)=>a.id-b.id);
+  allPokemon = await Promise.all(promises);
+
+  allPokemon.sort((a, b) => a.id - b.id);
   applyFilters();
 }
 
@@ -562,6 +565,21 @@ generationSelect.onchange = e => loadGen(e.target.value);
 searchInput.oninput = applyFilters;
 closeModal.onclick = ()=> modal.classList.add("hidden");
 
+/* ========= CACHE ========= */
+
+async function fetchPokemon(id) {
+  const key = `pokemon-${id}`;
+  const cached = localStorage.getItem(key);
+  if (cached) return JSON.parse(cached);
+
+  const data = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)
+    .then(r => r.json());
+
+  localStorage.setItem(key, JSON.stringify(data));
+  return data;
+}
+
+
 /* ========= START ========= */
 
-loadGen("all");
+loadGen(1);
